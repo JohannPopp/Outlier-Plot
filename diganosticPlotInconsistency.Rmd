@@ -4,8 +4,8 @@ title: Inconsistencies in the reproduction of figures 5.12 and 5.15 of Hosmer et
 author: "Johann Popp"
 date: "11 September 2017"
 output:
-  html_document: default
   pdf_document: default
+  html_document: default
 ---
 
 ```{r setup, include=FALSE}
@@ -77,9 +77,12 @@ polygon(x = c(0.043, 0.075, 0.177, 0.163), y = c(0.011, 0.004, 0.012, 0.030), co
 
 ```
 
+
 But still a close inspection of the highlighted area shows, that even this plot is not exactly the same as figure 5.12 in the book.
 
-Regarding figure 5.15 some parts seem to be reproduced by a plot based on covariate patterns and other parts are quite well fitted by the reproduction based on individual cases. Overal the reproduced values of Cook's distance are substantially smaller than those shown in figure 5.15. Especially the highlightet point seems to be the one with a value of about 3.8 in the book.
+
+Regarding figure 5.15 some parts seem to be reproduced by a plot based on covariate patterns and other parts are quite well fitted by the reproduction based on individual cases. Overal the reproduced values of Cook's distance are substantially smaller than those shown in figure 5.15. Especially the highlightet point seems to be the one with a value of about 0.38 in the book.
+
 ```{r, cooks distance}
 # Plot Cook's distans vs. fit
 plot(dat$fit, dat$deltabeta, pch = 16, cex = 0.8, xlab = "Estimated probability", ylab = "Cook's distance", main = "Cook's distance based on covariate patterns", xlim = c(0, 0.8), bty = "n")
