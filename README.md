@@ -9,7 +9,7 @@ The plots are quite the same as figures 5.12 to 5.15 in the book but there are s
 
 "Example Logistic Regression Diagnostics2.R" is the shiny app published at https://poppi.shinyapps.io/outlierdiagnostic/. Within this app it is possible to load your own data and specify your own model.
 
-"Example Linear Regression Diagnostics.R" produces plots for a linear regression model as recommended by Field 2005[^2]. This app not jet allows to enter own data. I am working on it.
+"Linear Regression Diagnostics.R" produces plots for a linear regression model as recommended by Field 2005[^2].
 
 
 [^1]: Hosmer, David W., Stanley Lemeshow, und Rodney X. Sturdivant. Applied logistic regression. 3rd Ed. Wiley series in probability and statistics. Hoboken, NJ: Wiley, 2013, p 186 ff.
