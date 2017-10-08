@@ -2,7 +2,7 @@
 # Reproduces the plots from Hosmer, David W., Stanley Lemeshow, und Rodney X. Sturdivant. Applied logistic regression. 3rd ed. Wiley series in probability and statistics. Hoboken, NJ: Wiley, 2013.
 
 # Johann Popp
-# 2017-09-07
+# 2017-10-08
 #########################################################
 
 # Load example data
@@ -258,8 +258,7 @@ ui <- fluidPage(h1("Logistic Regression Diagnostics"),
     
     # Leverage
     output$plot1 <- renderPlot({
-      withProgress(message="Calculation in progress...", value = 0, {
-      ggplot(data = dat, aes(x = fit, y = leverage)) +
+            ggplot(data = dat, aes(x = fit, y = leverage)) +
         geom_text(data = brushTable(), 
                   label = paste(" ", brushTable()$cpid, " "), 
                   hjust = "inward", colour = "darkblue", size = 3) +
@@ -267,7 +266,7 @@ ui <- fluidPage(h1("Logistic Regression Diagnostics"),
         geom_point(data = brushTable(), 
                    shape = 21, size = 2.5, fill = "blue", alpha = 1) +
         labs(x = "Estimated probability", y = "Leverage")
-    })})
+    })
     
     # Change in Pearson chi-squre
     
@@ -401,7 +400,7 @@ ui <- fluidPage(h1("Logistic Regression Diagnostics"),
     # Convert to covariate pattern with diagnostic statistics
     # aggregate to covariate pattern
     cpC <- reactive({
-      withProgress(message="It may take some time to calculate covariate patterns...", {
+      withProgress(message="It may take a long time to calculate covariate patterns...", {
       epi.cp(model.frame(modelC())[-1])
       })})
     
