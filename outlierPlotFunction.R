@@ -25,6 +25,9 @@ hlDigPlot <- function(model){
   ## ui
   ui <- fluidPage(
     h2("Logistic Regression Diagnostics"),
+    tags$p("These are plots recommended by Hosmer et al 2013¹ to identify extreme and influential covariate patterns in a logistic regression model. Inspect points that are way out of line of the others. Mark them by brushing (hold left mouse button and move the pointer). This will show you the variable values of the selected covariate patterns and highlight them in all the other plots. Try to find out what makes these covariate patterns so special. Perhaps they are data entry errors or they are an important combination of variables that needs to be considered by an interaction in the model. See what happens to the model if you would exclude them. But in the end never just exclude data just because it does not fit your model."),
+    tags$p(tags$strong("Attention:"), "The plots differ from those printed in the book that are produced with STATA. It seems to have something to do with the calculation of leverage on the level of covariate patterns. You can find a detailed description of this problem at", tags$a(href = "https://github.com/JohannPopp/Outlier-Plot/blob/master/diganosticPlotInconsistency.pdf", "https://github.com/JohannPopp/Outlier-Plot/blob/master/diganosticPlotInconsistency.pdf"), "."),
+    tags$p("You can download this code as an R-function to apply it to your logistic regression model: ", tags$a(href = "https://github.com/JohannPopp/Outlier-Plot", "https://github.com/JohannPopp/Outlier-Plot"), "."),
     fluidRow(
       column(4,
              plotOutput("plot1", height = 300,
@@ -39,16 +42,22 @@ hlDigPlot <- function(model){
       column(4,
              plotOutput("plot3", height = 300,
                         brush = brushOpts(id = "brP")),
-             h4("Selected rows in input data:"),
+             h4("Selected rows in (casewise) input data:"),
              verbatimTextOutput("selectedCases"))
     ),
     h3("Selected covariate patterns"),
     tableOutput("brushed"),
     h3("Change in model coefficients when seleced covariate patterns are erased"),
     tableOutput("modelCompare"),
-    verbatimTextOutput("full"),
-    verbatimTextOutput("reduced")
+    fluidRow(
+      column(6,
+             verbatimTextOutput("full")),
+      column(6,
+            verbatimTextOutput("reduced"))
     )
+  ,
+  "¹ Hosmer, David W., Stanley Lemeshow, und Rodney X. Sturdivant. Applied logistic regression. 3rd. ed. Wiley series in probability and statistics. Hoboken, NJ: Wiley, 2013."
+  )
   
   
   ## server
