@@ -1,5 +1,5 @@
 # Outlier-Plot
-Creating outlier plots for logistic regression
+Creating outlier plots for logistic and linear regression
 
 The code produces plots for diagnosis of outliers in logistic regression as recomended by Hosmer et al 2013[^1]. A brush function hightlights data points that are selected in one of these plots in all the other plots. 
 
