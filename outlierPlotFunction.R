@@ -5,20 +5,20 @@
 # 2017-09-07
 #########################################################
 
-# Load example data
-glow <- aplore3::glow500
-
-# Recode RATERISK
-glow$raterisk3 <- cut(as.numeric(glow$raterisk), 2)
-levels(glow$raterisk3) <- c("less/same", "greater")
-
-
-# Logistic model from Table 4.16
-model <- glm(fracture ~ age + height + priorfrac + momfrac + armassist + raterisk3 + age:priorfrac + momfrac:armassist, data = glow, family = "binomial")
+# # Load example data
+# glow <- aplore3::glow500
+# 
+# # Recode RATERISK
+# glow$raterisk3 <- cut(as.numeric(glow$raterisk), 2)
+# levels(glow$raterisk3) <- c("less/same", "greater")
+# 
+# 
+# # Logistic model from Table 4.16
+# model <- glm(fracture ~ age + height + priorfrac + momfrac + armassist + raterisk3 + age:priorfrac + momfrac:armassist, data = glow, family = "binomial")
 
 #########################
 # Start function
-hlDigPlot <- function(model){
+DiagPlotLogistic <- function(model){
   library(epiR)
   library(shiny)
   library(ggplot2)
@@ -231,11 +231,11 @@ hlDigPlot <- function(model){
   
   shinyApp(ui = ui, server = server)
 #  summary(model)
-  
+
   
 }
 
-hlDigPlot(model)
+#DiagPlotLogistic(model)
 
 
 
