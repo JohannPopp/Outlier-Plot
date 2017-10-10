@@ -59,11 +59,11 @@ library(epiR)
 ##########
 # creating a faster version of epiR::epi.cp
 
-# working data set
+
 
 popp.cp <- function(dat){
+  
 dat <- data.frame(id = 1:nrow(dat), dat)
-
 
 # add an indicator variable for covariate patterns
 dat$indi <- apply(dat[,ncol(dat):2], 1, function(x) as.factor(paste(x, collapse = "")))

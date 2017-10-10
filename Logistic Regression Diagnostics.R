@@ -69,8 +69,42 @@ server <- function(input, output){
   # Convert to covariate patterns
   ###############
   
+  # creating a faster version of epiR::epi.cp
+  
+  popp.cp <- function(dat){
+    
+    dat <- data.frame(id = 1:nrow(dat), dat)
+    
+    
+    # add an indicator variable for covariate patterns
+    dat$indi <- apply(dat[,ncol(dat):2], 1, function(x) as.factor(paste(x, collapse = "")))
+    
+    # order according to the indicator variable
+    dat <- dat[order(dat$indi),]
+    
+    # creating a variable that indicates all the cases of each covariate pattern
+    cp.id <- tapply(dat$id, dat$indi, function(x) paste(x, collapse = ","))
+    
+    n <- as.numeric(unlist(lapply(strsplit(cp.id, ","), length)))
+    # obs <- tapply(testMod$model[,1], dat$indi, sum)
+    
+    
+    # Creating a data.frame of covariate patterns
+    cp <- unique(dat[,2:ncol(dat)])
+    n <- as.numeric(unlist(lapply(strsplit(cp.id, ","), length)))
+    id <- tapply(dat$id, dat$indi, function(x) (x)[1])
+    cov.pattern <- data.frame(id, n, cp[,-ncol(cp)])
+    rownames(cov.pattern) <- rownames(cp)
+    ## Create a vector with the covariate pattern for each case
+    id <- as.numeric(unlist(lapply(strsplit(cp.id, ","), function(x) rep(min(as.numeric(unlist(x))), length(x)))))[order(dat$id)]
+    
+    list(cov.pattern = cov.pattern, id = id)
+    
+  }
+  
+  
   # aggregate to covariate pattern
-  cp <- epi.cp(model.frame(model)[-1])
+  cp <- popp.cp(model.frame(model)[-1])
   
   # Number of outcome events per covariate pattern
   obs <- as.vector(by(as.numeric(as.factor(model$model[,1]))-1, as.factor(cp$id), sum))
