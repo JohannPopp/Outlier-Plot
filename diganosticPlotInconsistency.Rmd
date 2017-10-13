@@ -2,7 +2,7 @@
 title: Inconsistencies in the reproduction of figures 5.12 and 5.15 of Hosmer et al.
   2013
 author: "Johann Popp"
-date: "11 September 2017"
+date: "13 October 2017"
 output:
   pdf_document: default
   html_document: default
@@ -14,7 +14,8 @@ knitr::opts_chunk$set(echo = TRUE)
 
 Hosmer et al[^1] have suggested several graphics to identify and investigate extreme and influencing covariate patterns in logistic regression models. These plots where reproduced using the computer software R[^2], taking data from package aplore3[^3] and using package epiR[^4] for the calculation of statistics based on covariate patterns rather then single data rows.
 
-```{r fourPlots, message=FALSE}
+
+```{r fourPlots, echo=FALSE, message=FALSE}
 par(mfrow = c(2,2))
 
 # Load example data
@@ -46,55 +47,154 @@ dat <- data.frame(res, deltaDeviance, fit, cp$cov.pattern)
 
 
 # Plot leverage vs. fit
-plot(dat$fit, dat$leverage, pch = 16, cex = 0.8, xlab = "Estimated probability", ylab = "Leverage", xlim = c(0, 0.8), ylim = c(0, 0.08), bty = "n")
+plot(dat$fit, dat$leverage, xlim = c(0, 0.8), ylim = c(0, 0.08), bty = "n", 
+     pch = 16, cex = 0.8, xlab = "Estimated probability", ylab = "Leverage")
+
 
 # Plot change in Chi-square vs. fit.
-plot(dat$fit, dat$deltachi, pch = 16, cex = 0.9, xlab = "Estimated probability", ylab = "Change in Pearson chi-square", xlim = c(0, 0.8), bty = "n")
+plot(dat$fit, dat$deltachi, xlim = c(0, 0.8), ylim = c(0, 18), bty = "n", pch = 16, 
+     cex = 0.8, xlab = "Estimated probability", ylab = "Change in Pearson chi-square")
+
 
 # Plot change in deviance vs. fit.
-plot(dat$fit, dat$deltaDeviance, pch = 16, cex = 0.9, xlab = "Estimated probability", ylab = "Change in deviance", xlim = c(0, 0.8), bty = "n")
+plot(dat$fit, dat$deltaDeviance, xlim = c(0, 0.8), ylim = c(0, 6), bty = "n", pch = 16,
+     cex = 0.8, xlab = "Estimated probability", ylab = "Change in deviance")
 
-# Plot Cook's distans vs. fit
-plot(dat$fit, dat$deltabeta, pch = 16, cex = 0.8, xlab = "Estimated probability", ylab = "Cook's distance", xlim = c(0, 0.8), bty = "n")
+
+# Plot Cook's distance vs. fit
+plot(dat$fit, dat$deltabeta, pch = 16, cex = 0.8, xlim = c(0, 0.8), 
+     bty = "n", xlab = "Estimated probability", ylab = "Cook's distance")
 
 
 par(mfrow = c(1,1))
 
 ```
 
+
 This works fine for the graphs showings change of Pearson chi-square and change of deviance but the plots of leverage vs. fitted values and Cook's distance vs. fitted values differ substantially from figures 5.12 and 5.15 of the book.
 
-In contrast to what is said in the book, figure 5.12 of the book can be reproduced with a plot based on n-statistics (all the cases) instead of m-statistics (covariate patterns).
 
-```{r, leverage plots}
-# Plot leverage vs. fit for covariate patterns
-plot(dat$fit, dat$leverage, pch = 16, cex = 0.8, xlab = "Estimated probability", ylab = "Leverage", main = "Leverage vs. fitted values based on covariate patterns", xlim = c(0, 0.8), ylim = c(0, 0.08), bty = "n")
+```{r, echo=FALSE}
+# Plot leverage vs. fit for covariate patterns against photographed picture
+library(png)
+img512 <- readPNG("HLS5-12blue.png")
+plot(1:2, xlim = c(0, 0.8), ylim = c(0, 0.08), bty = "n", xlab = "Estimated probability", ylab = "Leverage", main = "Leverage based on package epiR vs. published figure 5.12")
+rasterImage(img512, xleft = -0.03, ybottom = -0.0045, xright = 0.827, ytop = 0.0838)
+points(dat$fit, dat$leverage, 
+       col = "#FF000090", pch = 1, cex = 1.2, lwd = 1.5)
+legend(0, 0.08, pch = c(16, 1), legend = c("Photograph of Fig. 5.12 in\nHosmer et al. 2013", "epiR"), col = c("blue", "red"))
 
+# Plot Cook's distance aggregated vs. fit
+img515 <- readPNG("HLS5-15blue.png")
+plot(1:2, pch = 16, cex = 0.8, xlim = c(0, 0.8), ylim = c(0, 0.4),bty = "n", 
+     xlab = "Estimated probability", ylab = "Cook's distance", 
+     main = "Cook's distance based on package epiR vs. published figure 5.15")
+rasterImage(img515, xleft = -0.023, ybottom = -0.022, xright = 0.832, ytop = 0.413)
+points(dat$fit, dat$deltabeta, 
+       col = "#FF000090", pch = 1, cex = 1.2, lwd = 1.5)
+legend(0.3, 0.4, legend = c("Photograph of Fig. 5.15 in\nHosmer et al. 2013", "epiR"),
+       pch = c(16, 1), col = c("blue", "red"))
+
+```
+
+
+With leverages based on non-aggregated n-statistics instead of covariate patterns (m-statistics) the plot can be roughly reproduced, but there are still some points that do not match.
+
+
+```{r, echo=FALSE}
 # Plot leverage vs. fit for each case
-plot(fitted.values(model), hatvalues(model), pch = 16, cex = 0.8, xlab = "Estimated probability", ylab = "Leverage", main = "Leverage vs. fitted values based on individual cases", xlim = c(0, 0.8), ylim = c(0, 0.08), bty = "n")
- 
-polygon(x = c(0.043, 0.075, 0.177, 0.163), y = c(0.011, 0.004, 0.012, 0.030), col = rgb(0,0,1,0.2), border = NA)
+plot(1:2, xlim = c(0, 0.8), ylim = c(0, 0.08), bty = "n", xlab = "Estimated probability", ylab = "Leverage", main = "Leverage based on non-aggregated data vs. published figure 5.12")
+rasterImage(img512, xleft = -0.03, ybottom = -0.0045, xright = 0.827, ytop = 0.0838)
+points(fitted.values(model), hatvalues(model), 
+       col = "#FF000090", pch = 1, cex = 1.2, lwd = 1.5)
+legend(0, 0.08, pch = c(16, 1), legend = c("Photograph of Fig. 5.12 in\nHosmer et al. 2013", "non-aggregated data"), col = c("blue", "red"))
 
 ```
 
 
-But still a close inspection of the highlighted area shows, that even this plot is not exactly the same as figure 5.12 in the book.
+But this remedy does not work for Cook's distance. The values based on n-statistics are completely different from those printed in the book and those calculated by epiR in magnitude and pattern.
 
 
-Regarding figure 5.15 some parts seem to be reproduced by a plot based on covariate patterns and other parts are quite well fitted by the reproduction based on individual cases. Overal the reproduced values of Cook's distance are substantially smaller than those shown in figure 5.15. Especially the highlightet point seems to be the one with a value of about 0.38 in the book.
-
-```{r, cooks distance}
+```{r, echo=FALSE}
 # Plot Cook's distans vs. fit
-plot(dat$fit, dat$deltabeta, pch = 16, cex = 0.8, xlab = "Estimated probability", ylab = "Cook's distance", main = "Cook's distance based on covariate patterns", xlim = c(0, 0.8), bty = "n")
-
-# Plot Cook's distans vs. fit
-plot(fitted.values(model), cooks.distance(model), pch = 16, cex = 0.8, xlab = "Estimated probability", ylab = "Cook's distance", main = "Cook's distance based on individual cases", xlim = c(0, 0.8), bty = "n")
-
-points(x = 0.2393311, y = 0.009456836, col = "blue", cex = 3)
+plot(1:2, pch = 16, cex = 0.8, xlim = c(0, 0.8), ylim = c(0, 0.4),bty = "n", 
+     xlab = "Estimated probability", ylab = "Cook's distance", 
+     main = "Cook's distance based non-aggrgated vs. published figure 5.15")
+rasterImage(img515, xleft = -0.023, ybottom = -0.022, xright = 0.832, ytop = 0.413)
+points(fitted.values(model), cooks.distance(model), 
+       col = "#FF000090", pch = 1, cex = 1.2, lwd = 1.5)
+legend(0.3, 0.4, legend = c("Photograph of Fig. 5.15 in\nHosmer et al. 2013", "Non-aggregated data"),
+       pch = c(16, 1), col = c("blue", "red"))
 
 ```
 
-As Cook's distance is based on leverage values it seems to me, that the calculation of those values in the package epiR differ from the calculation underlying the the figures of the book. As I am unfortunately not really into matrix algebra I can not effectively compare the syntax of the function epiR::epi.cpresids with formulas given in the book.
+
+I tried out the newer package logisticDx[^5] to calculate the diagnostic statistics. This packackage specializes on diagnostic tests for regression models with binomial response and is explicitely based on the book of Hosmer et al. albeit in its second edition from 2000.
+
+
+```{r, echo=FALSE}
+# Use leverage based on package logisticDX
+library(LogisticDx)
+ldx <- dx(model)
+plot(1:2, xlim = c(0, 0.8), ylim = c(0, 0.08), bty = "n", xlab = "Estimated probability", ylab = "Leverage", main = "Leverage based on package logisticDX vs. published figure 5.12")
+rasterImage(img512, xleft = -0.03, ybottom = -0.0045, xright = 0.827, ytop = 0.0838)
+points(ldx$P, ldx$h, 
+       col = "#FF000090", pch = 1, cex = 1.2, lwd = 1.5)
+legend(0, 0.08, pch = c(16, 1), legend = c("Photograph of Fig. 5.12 in\nHosmer et al. 2013", "logisticDX::dx"), col = c("blue", "red"))
+
+# Compare leverages based on logisticDx with leverages based on original data
+plot(1:2, xlim = c(0, 0.8), ylim = c(0, 0.08), bty = "n", xlab = "Estimated probability", ylab = "Leverage", main = "Leverage based on logisticDX::dx vs. original data")
+points(fitted.values(model), hatvalues(model), col = "#FF0000", lwd = 1.5, cex = 1.2)
+points(ldx$P, ldx$h, col = "#0000FF60", pch = 16)
+legend(0, 0.08, pch = c(16, 1), legend = c("logisticDX::dx", "non-aggregated data"), col = c("#0000FF60", "red"))
+
+```
+
+
+You can see, that the leverages of logisticDX::dx are exactly the same as those calculated from non-aggregated data (n-statistics). We have seen bevore that theese are matching figure 5.12 quite well but not with all the points.
+
+When they are calculated with logisticDX::dx, also the values of Cook's distance are fitting well with figure 5.15 despite of some single cases. I guess these are the same as those that do not fit in leverarge.
+
+
+
+```{r, echo=FALSE}
+plot(1:2, pch = 16, cex = 0.8, xlim = c(0, 0.8), ylim = c(0, 0.4),bty = "n", 
+     xlab = "Estimated probability", ylab = "Cook's distance", 
+     main = "Cook's distance based on package logisticDx vs. published figure 5.15")
+rasterImage(img515, xleft = -0.023, ybottom = -0.022, xright = 0.832, ytop = 0.413)
+points(ldx$P, ldx$dBhat, 
+       col = "#FF000090", pch = 1, cex = 1.2, lwd = 1.5)
+legend(0.3, 0.4, legend = c("Photograph of Fig. 5.15 in\nHosmer et al. 2013", "logisticDx::dx"),
+       pch = c(16, 1), col = c("blue", "red"))
+```
+
+
+
+Last but not least here are the plots of change in Pearson chi-square and change in deviance. The pacages epiR and logisticDx produce exactly the same results. I think that the missmatches in these graphs are due to my bad photographs: The book page was not completely plane but a little bit arched.
+
+
+```{r, echo=FALSE}
+# Change in chi-square
+img513 <- readPNG("HLS5-13blue.png")
+plot(1:2, xlim = c(0, 0.8), ylim = c(0, 18), bty = "n", xlab = "Estimated probability", ylab = "Change in Pearson chi-square", main = "Change in Pearson chi-square\nbased on logisticDX::dx vs. published figure 5.13")
+rasterImage(img513, xleft = -0.025, ybottom = -0.9, xright = 0.824, ytop = 16.7)
+points(ldx$P, ldx$dChisq, 
+       col = "#FF000090", pch = 1, cex = 1.2, lwd = 1.5)
+legend(0.4, 15, pch = c(16, 1), legend = c("Photograph of Fig. 5.13 in\nHosmer et al. 2013", "logisticDx::dx"), col = c("blue", "red"))
+
+# Change in deviance
+img514 <- readPNG("HLS5-14blue.png")
+plot(1:2, xlim = c(0, 0.8), ylim = c(0, 6), bty = "n", xlab = "Estimated probability", ylab = "Change in deviance", main = "Change deviance\nbased logosticDx::dx vs. published figure 5.13")
+rasterImage(img514, xleft = -0.025, ybottom = -0.4, xright = 0.824, ytop = 6.2)
+points(ldx$P, ldx$dDev, 
+       col = "#FF000090", pch = 1, cex = 1.2, lwd = 1.5)
+legend(0.3, 6, pch = c(16, 1), legend = c("Photograph of Fig. 5.14 in\nHosmer et al. 2013", "logisticDX::dx"), col = c("blue", "red"))
+
+```
+
+
+I think that the missmatches in these graphs are due to my bad photographs: The book page was not completely plane but a little bit arched.
+
 
 
 [^2]:  R Core Team (2017). R: A language and environment for statistical computing. R Foundation for Statistical Computing, Vienna, Austria. URL https://www.R-project.org/.
@@ -106,3 +206,5 @@ As Cook's distance is based on leverage values it seems to me, that the calculat
 
 
 [^4]:   Mark Stevenson with contributions from Telmo Nunes, Cord Heuer, Jonathon Marshall, Javier Sanchez, Ron Thornton, Jeno Reiczigel, Jim Robison-Cox, Paola Sebastiani, Peter Solymos, Kazuki Yoshida, Geoff Jones, Sarah Pirikahu, Simon Firestone and Ryan Kyle. (2017). epiR: Tools for the Analysis of Epidemiological Data. R package version 0.9-87. https://CRAN.R-project.org/package=epiR
+
+[^5]:   Chris Dardis (2015). LogisticDx: Diagnostic Tests for Models with a Binomial Response. R package version 0.2. https://CRAN.R-project.org/package=LogisticDx

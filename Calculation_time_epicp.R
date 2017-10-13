@@ -16,11 +16,13 @@
 # Test data
 
 dat <- data.frame(
-  # dv = sample(c(TRUE, FALSE), 5000, replace = TRUE),
-  iv1 = sample(LETTERS, 3000, replace = TRUE),
-  iv2 = sample(letters, 3000, replace = TRUE),
+  dv = sample(c(TRUE, FALSE), 3000, replace = TRUE),
+  iv1 = sample(1:2, 3000, replace = TRUE),
+  iv2 = sample(30:50, 3000, replace = TRUE),
   age = sample(18:100, 3000, replace = TRUE))
 
+datShort <- dat[1:40,]
+modTest <- glm(dv ~ iv1 + iv2, data = datShort, family = binomial)
 
 library(epiR)
 ######
@@ -98,14 +100,28 @@ list(cov.pattern = cov.pattern, id = id)
 # testing
 
 system.time({
-wo <- epi.cp(dat)
+wo <- epi.cp(dat[,-1])
 })
 system.time({
-wi <- popp.cp(dat)
+wi <- popp.cp(dat[,-1])
 })
+##... and what does LogisticDX::dx?
+system.time({
+  wl <- dx(modTest)
+}) #--- very fast
+wa <- popp.cp(model.frame(modTest)[-1])
 
 wo$cov.pattern[wo$cov.pattern$n > 1,][1:10,]
 wi$cov.pattern[wi$cov.pattern$n > 1,][1:10,]
+wl[wl$n > 1,][1:10,]# different sorting
+
+wlid <-(apply(wl[,2:3], 1, function(x) paste(x, collapse = "")))
+datid <- apply(modTest$model[,-1], 1, function(x) paste(x, collapse = ""))
+i <- 1
+data.frame(modTest$model[is.element(datid, wlid[1]),], rep(wl[i,2:3], wl[[i,6]]))
+
+
+data.frame(wl[,2:7], wlid)
 
 cbind(wo$id, wi$id)[2000:2030,] # the is's partly different
 
