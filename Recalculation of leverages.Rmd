@@ -38,7 +38,7 @@ cp$cpID <- apply(cp, 1, function(x) paste(x, collapse = ""))
 cp$m <- tapply(datN[,1], datN$cpID, length)[rank(cp$cpID)]
 
 # Number of cases per covariate pattern
-cp$Y <- tapply(datN[,1], datN$cpID, function(x) sum(x == "Yes"))[rank(cp$cpID)]
+cp$Y <- tapply(model$y, datN$cpID, sum)[rank(cp$cpID)]
 
 # Estimated probability
 cp$P <- fitted.values(model)[rownames(cp)]

@@ -76,9 +76,9 @@ This works fine for the graphs showings change of Pearson chi-square and change 
 ```{r, echo=FALSE}
 # Plot leverage vs. fit for covariate patterns against photographed picture
 library(png)
-img512 <- readPNG("HLS5-12blue.png")
+img512 <- readPNG("HLS5-12new.png")
 plot(1:2, xlim = c(0, 0.8), ylim = c(0, 0.08), bty = "n", xlab = "Estimated probability", ylab = "Leverage", main = "Leverage based on package epiR vs. published figure 5.12")
-rasterImage(img512, xleft = -0.03, ybottom = -0.0045, xright = 0.827, ytop = 0.0838)
+rasterImage(img512, xleft = -0.03, ybottom = -0.0045, xright = 0.817,ytop = 0.0827)
 points(dat$fit, dat$leverage, 
        col = "#FF000090", pch = 1, cex = 1.2, lwd = 1.5)
 legend(0, 0.08, pch = c(16, 1), legend = c("Photograph of Fig. 5.12 in\nHosmer et al. 2013", "epiR"), col = c("blue", "red"), cex = 0.8)
@@ -103,7 +103,7 @@ With leverages based on non-aggregated n-statistics instead of covariate pattern
 ```{r, echo=FALSE}
 # Plot leverage vs. fit for each case
 plot(1:2, xlim = c(0, 0.8), ylim = c(0, 0.08), bty = "n", xlab = "Estimated probability", ylab = "Leverage", main = "Leverage based on non-aggregated data vs. published figure 5.12")
-rasterImage(img512, xleft = -0.03, ybottom = -0.0045, xright = 0.827, ytop = 0.0838)
+rasterImage(img512, xleft = -0.03, ybottom = -0.0045, xright = 0.817,ytop = 0.0827)
 points(fitted.values(model), hatvalues(model), 
        col = "#FF000090", pch = 1, cex = 1.2, lwd = 1.5)
 legend(0, 0.08, pch = c(16, 1), col = c("blue", "red"), cex = 0.8,
@@ -116,7 +116,7 @@ But this remedy does not work for Cook's distance. The values based on n-statist
 
   
 ```{r, echo=FALSE}
-# Plot Cook's distans vs. fit
+# Plot Cook's distance vs. fit
 plot(1:2, pch = 16, cex = 0.8, xlim = c(0, 0.8), ylim = c(0, 0.4),bty = "n", 
      xlab = "Estimated probability", ylab = "Cook's distance", 
      main = "Cook's distance based non-aggrgated vs. published figure 5.15")
@@ -138,7 +138,7 @@ I tried out the newer package logisticDx[^5] to calculate the diagnostic statist
 library(LogisticDx)
 ldx <- dx(model)
 plot(1:2, xlim = c(0, 0.8), ylim = c(0, 0.08), bty = "n", xlab = "Estimated probability", ylab = "Leverage", main = "Leverage based on package logisticDX vs. published figure 5.12")
-rasterImage(img512, xleft = -0.03, ybottom = -0.0045, xright = 0.827, ytop = 0.0838)
+rasterImage(img512, xleft = -0.03, ybottom = -0.0045, xright = 0.817,ytop = 0.0827)
 points(ldx$P, ldx$h, 
        col = "#FF000090", pch = 1, cex = 1.2, lwd = 1.5)
 legend(0, 0.08, pch = c(16, 1), col = c("blue", "red"), cex = 0.8, 
@@ -180,7 +180,7 @@ Let's see what happens if we multiply the leverage times m, the number of cases 
 ```{r, leverage times n, echo=FALSE}
 # Leverage of logisticDX:dx times size of covariate pattern
 plot(1:2, xlim = c(0, 0.8), ylim = c(0, 0.08), bty = "n", xlab = "Estimated probability", ylab = "Leverage", main = "Leverage based on package logisticDX times m\nvs. published figure 5.12")
-rasterImage(img512, xleft = -0.03, ybottom = -0.0045, xright = 0.827, ytop = 0.0838)
+rasterImage(img512, xleft = -0.03, ybottom = -0.0045, xright = 0.817,ytop = 0.0827)
 points(ldx$P, ldx$h*ldx$n, 
        col = "#FF000090", pch = 1, cex = 1.2, lwd = 1.5)
 legend(0, 0.08, pch = c(16, 1), 
@@ -232,7 +232,7 @@ H <- rawH * m * cp$fit * (1-cp$fit)
 
 ```{r, stata formula plot, echo=FALSE}
 plot(1:2, xlim = c(0, 0.8), ylim = c(0, 0.08), bty = "n", xlab = "Estimated probability", ylab = "Leverage", main = "Leverage based on Stata formula vs. published figure 5.12")
-rasterImage(img512, xleft = -0.03, ybottom = -0.0045, xright = 0.827, ytop = 0.0838)
+rasterImage(img512, xleft = -0.03, ybottom = -0.0045, xright = 0.817,ytop = 0.0827)
 
 points(cp$fit, H, 
        col = "#00906090", pch = 1, cex = 1.7, lwd = 1.5)
@@ -271,57 +271,124 @@ legend(0.5, 0.4,
 This looks pretty good as well. 
 
 
-I will work out the same for change in Pearson chi-square and cange in deviance soon.
+I decided to recalculate all the statistics my self, based on the formulas given in Hosmer et al 2013.
 
-
+```{r, Recalculation of diagnostic statistics}
+logRegDiagn <- function(model){
   
-
+  ################
+  # Basic data extraction and calculation
   
-```{r, eval=FALSE, "Change in Pearson chi-square", echo=FALSE, include=FALSE}
-img513 <- readPNG("HLS5-13blue.png")
-plot(1:2, xlim = c(0, 0.8), ylim = c(0, 18), bty = "n", xlab = "Estimated probability", ylab = "Change in Pearson chi-square", main = "Change in Pearson chi-square\nbased on logisticDX::dx vs. published figure 5.13")
-rasterImage(img513, xleft = -0.025, ybottom = -0.9, xright = 0.824, ytop = 16.7)
-points(ldx$P, ldx$dChisq, 
-       col = "#FF000090", pch = 1, cex = 1.2, lwd = 1.5)
-legend(0.4, 15, pch = c(16, 1), col = c("blue", "red"), cex = 0.8,
-       legend = c("Photograph of Fig. 5.13 in\nHosmer et al. 2013", "logisticDx::dx"))
+  # Extract non-aggregated data
+  datN <- model$model
+    # convert to covariate pattern
+  cp <- unique(datN[,-1])
+  
+  # Indicator for covariate patterns
+  cpIdN<- apply(datN[,-1], 1, function(x) paste(x, collapse = ""))
+  cpIdM <- apply(cp, 1, function(x) paste(x, collapse = ""))
+  
+  # Size of covariate patterns
+  m <- tapply(datN[,1], cpIdN, length)[rank(cpIdM)]
+  # Number of cases per covariate pattern
+  Y <- tapply(model$y, cpIdN, sum)[rank(cpIdM)]
+  # Estimated probability
+  Pi <- fitted.values(model)[rownames(cp)]
+  
+  ####################
+  # Basic residuals
+  
+  # Pearson residual (formula 5.1)
+  rPears <- (Y - Pi * m) / sqrt(m * Pi * (1 - Pi))
+  
+  # Deviance residual (formula 5.3)
+  rDev <- ifelse(Y - m * Pi > 0, 1, -1) * 
+    (2 * (Y * log(Y / (m * Pi)) + (m - Y) * log((m - Y) / (m * (1 - Pi)))))^(1/2)
+  rDev[Y == 0] <- -sqrt(2 * m[Y == 0] * abs(log(1 - Pi[Y == 0])))
+  rDev[Y == m] <- sqrt(2 * m[Y == m] * abs(log(Pi[Y == m])))
+  
+  
+  ############
+  # Diagnostic statistics to plot
+  
+  # Leverage
+  V <- diag(m * Pi * (1 - Pi))
+  X <- unique(model.matrix(model))
+  
+  H <- V^(1/2) %*% X %*% solve(t(X) %*% V %*% X) %*% t(X) %*% (V^(1/2)) # formula 5.21
+  h <- diag(H)
 
-# based on leverage times n
-img513 <- readPNG("HLS5-13blue.png")
-plot(1:2, xlim = c(0, 0.8), ylim = c(0, 18), bty = "n", xlab = "Estimated probability", ylab = "Change in Pearson chi-square", main = "Change in Pearson chi-square based on logisticDX::dx\n with leverage times n vs. published figure 5.13")
-rasterImage(img513, xleft = -0.025, ybottom = -0.9, xright = 0.824, ytop = 16.7)
-points(ldx$P, nsPr^2, 
-       col = "#FF000090", pch = 1, cex = 1.2, lwd = 1.5)
-legend(0.4, 15, pch = c(16, 1), cex = 0.8, col = c("blue", "red"),
-       legend = c("Photograph of Fig. 5.13 in\nHosmer et al. 2013", 
-                  "logisticDx::dx; leverage times n"))
+  # Cook's distance (formula 5.24)
+  deltaBeta <- rPears^2 * h / (1 - h)^2  
+  
+  # Change in Pearson chi-square (formula 5.25)
+  deltaChi <- rPears^2 / (1 - h)
+  
+  # Change in deviance (formula 5.26)
+  deltaDeviance <- rDev^2 / (1 - h)
+  
+  
+  ################
+  # collect output data
+  out <- data.frame(m, Y, Pi, rPears, rDev, h, deltaBeta, deltaChi, deltaDeviance, cpIdM, cp)
+  rownames(out) <- rownames(cp)
+  out
+  
+}
 ```
-  
-  
 
-  
-  
-```{r, eval=FALSE, include=FALSE}
 
-# Change in deviance
-img514 <- readPNG("HLS5-14blue.png")
-plot(1:2, xlim = c(0, 0.8), ylim = c(0, 6), bty = "n", xlab = "Estimated probability", ylab = "Change in deviance", main = "Change deviance\nbased logosticDx::dx vs. published figure 5.13")
-rasterImage(img514, xleft = -0.025, ybottom = -0.4, xright = 0.824, ytop = 6.2)
-points(ldx$P, ldx$dDev, 
+The resulting plots finely fit the figures of the book. I think that the marginal deviations that can be seen are due to my less than perfect scans of the printed graphs.
+
+```{r, echo=FALSE, "plots with recalculated statistics", echo=FALSE}
+cp <- logRegDiagn(model)
+
+
+plot(1:2, xlim = c(0, 0.8), ylim = c(0, 0.08), bty = "n", xlab = "Estimated probability", ylab = "Leverage", main = "Recalculated leverage vs. published figure 5.12")
+rasterImage(img512, xleft = -0.03, ybottom = -0.0045, xright = 0.817,ytop = 0.0827)
+points(cp$Pi, cp$h, 
        col = "#FF000090", pch = 1, cex = 1.2, lwd = 1.5)
-# points(ldx$P, ldx$dDev / (1-H), 
-#        col = "#00602090", pch = 16, cex = 1, lwd = 1.5)
-legend(0.3, 6, pch = c(16, 1), cex = 0.8, col = c("blue", "red"),
-       legend = c("Photograph of Fig. 5.14 in\nHosmer et al. 2013", "logisticDX::dx"))
+#legend(0, 0.08, pch = c(16, 1), legend = c("Photograph of Fig. 5.12 in\nHosmer et al. 2013", "Recalc. Hosmer formula"), col = c("blue", "red"), cex = 0.8)
+
+plot(1:2, pch = 16, cex = 0.8, xlim = c(0, 0.8), ylim = c(0, 0.4),bty = "n", 
+     xlab = "Estimated probability", ylab = "Cook's distance", 
+     main = "Re-calculated Cook's distance vs. published figure 5.15")
+rasterImage(img515, xleft = -0.024, ybottom = -0.022, xright = 0.82, ytop = 0.413)
+points(cp$Pi, cp$deltaBeta, 
+       col = "#FF000090", pch = 1, cex = 1.2, lwd = 1.5)
+# legend(0.5, 0.4, legend = c("Photograph of Fig. 5.15 in\nHosmer et al. 2013", "Recalculation"),
+       # pch = c(16, 1), col = c("blue", "red"))
+
+img513 <- readPNG("HLS5-13new.png")
+plot(1:2, xlim = c(0, 0.8), ylim = c(0, 18), bty = "n", xlab = "Estimated probability", ylab = "Change in Pearson chi-square", main = "Change in Pearson chi-square vs. published figure 5.13")
+rasterImage(img513, xleft = -0.032, ybottom = -1.1, xright = 0.82, ytop = 16.6)
+points(cp$Pi, cp$deltaChi, 
+       col = "#FF000090", pch = 1, cex = 1.2, lwd = 1.5)
+# legend(0.4, 15, pch = c(16, 1), legend = c("Photograph of Fig. 5.13 in\nHosmer et al. 2013", "Recalculation"), col = c("blue", "red"))
+
+
+img514 <- readPNG("HLS5-14new.png")
+plot(1:2, xlim = c(0, 0.8), ylim = c(0, 6), bty = "n", xlab = "Estimated probability", ylab = "Change in deviance", main = "Change deviance vs. published figure 5.13")
+rasterImage(img514, xleft = -0.03, ybottom = -0.38, xright = 0.824, ytop = 6.27)
+points(cp$Pi, cp$deltaDeviance,
+       col = "#FF000090", pch = 1, cex = 1.2, lwd = 1.5)
+# legend(0.3, 6, pch = c(16, 1), legend = c("Photograph of Fig. 5.14 in\nHosmer et al. 2013", "Recalculation"), col = c("blue", "red"))
+
+
 
 ```
+
+  
+
+  
+
 
   
 
 
 ### Summary
 
-There are two R packages epiR and logisticDx that provide functions to calculate diagnostics of outliers and influential covariate patterns for logistic regression models. Non of them exactly reproduces the plots recommended by Hosmer et al. that where produced with Stata. Plots based on epiR differ substatially from the book, those based on logisticDx only marginally. Stata - the program used to produce the plots in the book - uses a different formula but it seems that you can multiply the single case leverages (that are routinely calculated by R) with the group size of the covariate pattern to get the same result.
+There are two R packages epiR and logisticDx that provide functions to calculate diagnostics of outliers and influential covariate patterns for logistic regression models. Non of them exactly reproduces the plots recommended by Hosmer et al. that where produced with Stata. Plots based on epiR differ substatially from the book, those based on logisticDx only marginally. Stata - the program used to produce the plots in the book - uses a different formula but it seems that you can multiply the single case leverages (that are routinely calculated by R) with the group size of the covariate pattern to get the same result. In the end I calculated the statistcs my self in R, using the formulas from the book. The resulting plots fit perfectly with the graphs from the book.
 
 
 
