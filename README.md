@@ -7,7 +7,7 @@ After some difficulties reproducing the example plots from the book exactly, I f
 
 [Example Logistic Regression Diagnostics.R](https://github.com/JohannPopp/Outlier-Plot/blob/master/Example%20Logistic%20Regression%20Diagnostics.R) is the shiny app published at https://poppi.shinyapps.io/logisticregressiondiagnostics/. Within this app it is possible to load your own data and specify your own model. For R users it might be even better to source [FunctionLogisticRegressionDiagnostics.R](https://github.com/JohannPopp/Outlier-Plot/blob/master/FunctionLogisticRegressionDiagnostics.R) and than to apply the function DiagPlotLogistic() to your glm-object. 
 
-[Linear Regression Diagnostics.R](https://github.com/JohannPopp/Outlier-Plot/blob/master/Linear%20Regression%20Diagnostics.R) produces plots for a linear regression model as recommended by Field 2005[^2] at https://poppi.shinyapps.io/linear-model-diagnostics/. I will add an R function for this app soon.
+[Linear Regression Diagnostics.R](https://github.com/JohannPopp/Outlier-Plot/blob/master/Linear%20Regression%20Diagnostics.R) produces plots for a linear regression model as recommended by Field 2005[^2] at https://poppi.shinyapps.io/linear-model-diagnostics/. The R-function to apply the plots to a lm()-object can be found at [FunctionLinearRegressionDiagnostics.R](https://github.com/JohannPopp/Outlier-Plot/blob/master/FunctionLinearRegressionDiagnostics.R)
 
 
 [^1]: Hosmer, David W., Stanley Lemeshow, und Rodney X. Sturdivant. Applied logistic regression. 3rd Ed. Wiley series in probability and statistics. Hoboken, NJ: Wiley, 2013, p 186 ff.
