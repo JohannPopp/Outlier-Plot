@@ -2,7 +2,7 @@
 title: Inconsistencies in the reproduction of figures 5.12 and 5.15 of Hosmer et al.
   2013
 author: "Johann Popp"
-date: "29 October 2017"
+date: "4 November 2017"
 output:
   html_document: default
   pdf_document: default
