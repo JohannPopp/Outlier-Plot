@@ -4,8 +4,8 @@ title: Inconsistencies in the reproduction of figures 5.12 and 5.15 of Hosmer et
 author: "Johann Popp"
 date: "4 November 2017"
 output:
-  html_document: default
   pdf_document: default
+  html_document: default
 ---
 
 ```{r setup, include=FALSE}
