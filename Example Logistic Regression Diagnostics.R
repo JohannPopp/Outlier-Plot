@@ -2,7 +2,7 @@
 # Reproduces the plots from Hosmer, David W., Stanley Lemeshow, und Rodney X. Sturdivant. Applied logistic regression. 3rd ed. Wiley series in probability and statistics. Hoboken, NJ: Wiley, 2013.
 
 # Johann Popp
-# 2017-11-05
+# 2017-11-19
 #########################################################
 # Preliminaries
 ############
@@ -56,9 +56,9 @@ library(ggplot2)
 ui <- fluidPage(h1("Logistic Regression Diagnostics"),
                 tabsetPanel(
                   tabPanel("Example Data",
-                           
+
                            tags$p("These are plots recommended by Hosmer et al 2013¹ to identify extreme and influential covariate patterns in a logistic regression model. Inspect points that are way out of line of the others. Mark them by brushing (hold left mouse button and move the pointer). This will show you the variable values of the selected covariate patterns and highlight them in all the other plots. Try to find out what makes these covariate patterns so special. Perhaps they are data entry errors or they are an important combination of variables that needs to be considered by an interaction in the model. See what happens to the model if you would exclude them. But in the end never just exclude data just because it does not fit your model."),
-                           tags$p("You can download this code as an R-function to apply it to your logistic regression model: ", tags$a(target = "_blank", href = "https://github.com/JohannPopp/FunctionLogisticRegressionDiagnostics", "https://github.com/JohannPopp/FunctionLogisticRegressionDiagnostics"), "."),
+                           tags$p("You can download this code as an R-function to apply it to your logistic regression model: ", tags$a(target = "_blank", href = "https://github.com/JohannPopp/Outlier-Plot/blob/master/FunctionLogisticRegressionDiagnostics.R", "https://github.com/JohannPopp/Outlier-Plot/blob/master/FunctionLogisticRegressionDiagnostics.R"), "."),
                            fluidRow(
                              column(4,
                                     plotOutput("plot1", height = 300,
@@ -92,6 +92,9 @@ ui <- fluidPage(h1("Logistic Regression Diagnostics"),
                   ),
                   
                   tabPanel("Enter Your Own Data and Model",
+                           # Warning for the web version of the app
+                           # tags$p(tags$b("Attention:"), "You will upload your data to https://poppi.shinyapps.io/logisticregressiondiagnostics. I will not look them up, but I can not guarantee that some one else might do it. If you are not using a public use file, please guard confidentiallity for your study participants:",
+                           # "Use the occasion to install R (plus the packages shiny and ggplot2) on your computer. Download the script for this app at", tags$a(target = "_blank", href = "https://github.com/JohannPopp/Outlier-Plot/blob/master/Example%20Logistic%20Regression%20Diagnostics.R","https://github.com/JohannPopp/Outlier-Plot/blob/master/Example Logistic Regression Diagnostics.R"), "and run it locally on your machine."), tags$hr(),
                            fluidRow(
                              column(4,
                                     fileInput("inData", "Choose File")),

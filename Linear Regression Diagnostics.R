@@ -3,7 +3,7 @@
 
 
 # Johann Popp
-# 2017-10-08
+# 2017-11-19
 #########################################################
 
 # Load example data (Record sales)
@@ -37,6 +37,10 @@ ui <- fluidPage(
   ###################
   # Enter Data and model
   h3("Enter Data"),
+  
+  # Warning for the web version of the app
+  # tags$p(tags$b("Attention:"), "You will upload your data to https://poppi.shinyapps.io/linear-model-diagnostics. I will not look them up, but I can not guarantee that some one else might do it. If you are not using a public use file, please guard confidentiallity for your study participants:",
+  # "Use the occasion to install R (plus the packages shiny and ggplot2) on your computer. Download the script for this app at", tags$a(target = "_blank", href = "https://github.com/JohannPopp/Outlier-Plot/blob/master/Linear%20Regression%20Diagnostics.R","https://github.com/JohannPopp/Outlier-Plot/blob/master/Linear Regression Diagnostics.R"), "and run it locally on your machine."), tags$hr(),
   
   fluidRow(
     column(4,
@@ -156,7 +160,7 @@ ui <- fluidPage(
   
   # verbatimTextOutput("info"),
   
-  "Version 10/2017. Programmed with R², shiny³ and ggplot2\u2074 by Johann Popp. Please feel free to comment and contribute at", a(target = "_blank", href = "https://github.com/JohannPopp/Outlier-Plot", "https://github.com/JohannPopp/Outlier-Plot"),
+  "Version 11/2017. Programmed with R², shiny³ and ggplot2\u2074 by Johann Popp. Please feel free to comment and contribute at", a(target = "_blank", href = "https://github.com/JohannPopp/Outlier-Plot", "https://github.com/JohannPopp/Outlier-Plot"),
   tags$hr(),
   "¹ Field, Andy P. Discovering statistics using SPSS: (and sex, drugs and rock „n“ roll). 2nd ed. London, Thousand Oaks, Calif.: Sage Publications, 2005.", br(),
   "² R Core Team. R: A Language and Environment for Statistical Computing. Vienna, Austria: R Foundation for Statistical Computing, 2017. https://www.R-project.org/.
